@@ -1,3 +1,6 @@
+" Vim plugin to search for synonyms on powerthesaurus.org
+" Version: 0.1
+
 let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 
 function! s:PowerThesaurus(...)
@@ -29,7 +32,7 @@ function! s:PowerThesaurus(...)
   echo "Querying powerthesaurus.org ..."
 
   " Run powerthesaurus.py and parse each line as a dictionary.
-  let l:res = map(systemlist(s:plugin_root_dir . '/powerthesaurus.py ' . shellescape(l:base)), 
+  let l:res = map(systemlist(s:plugin_root_dir . '/powerthesaurus.py ' . shellescape(l:base)),
         \ {_, val -> eval(val)})
 
   " Fix the case of completion based on whether the first character of

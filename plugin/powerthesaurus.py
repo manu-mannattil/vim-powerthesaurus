@@ -1,14 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # WIP script to integrate powerthesaurus.org with Vim.
 #
-# TODO:
-#
-# 1. Simplify GQL queries
-# 2. Right align part of speech
-# 3. new vim keyword thesaurusfunc -- https://github.com/vim/vim/issues/8950 that handles some of
-# the plugin's features
 
 import re
 import sys
@@ -47,9 +41,9 @@ query TERM_QUERY($term: String!) {
 }"""
 
 GQL_THESAURUS_QUERY = r"""
-query THESAURUSES_QUERY($after: String, $first: Int, $before: String, 
-                        $last: Int, $termID: ID!, $list: List!, 
-                        $sort: ThesaurusSorting!, $tagID: Int, 
+query THESAURUSES_QUERY($after: String, $first: Int, $before: String,
+                        $last: Int, $termID: ID!, $list: List!,
+                        $sort: ThesaurusSorting!, $tagID: Int,
                         $posID: Int, $syllables: Int, $type: Type) {
   thesauruses(
     termId: $termID
@@ -98,6 +92,55 @@ query THESAURUSES_QUERY($after: String, $first: Int, $before: String,
     __typename
   }
 }"""
+
+
+GQL_DEFINITIONS_QUERY = """
+query DEFINITIONS_QUERY($termID: ID!, $posID: ID, $after: String,
+                        $first: Int, $before: String, $last: Int) {
+  definitions(
+    termId: $termID
+    posId: $posID
+    after: $after
+    first: $first
+    before: $before
+    last: $last
+    ) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+        __typename
+        }
+      edges {
+        node {
+          _type
+          id
+          definition
+          synonyms
+          usages
+          rating
+          partsOfSpeech
+          author {
+            id
+            title
+            link
+            __typename
+            }
+          vote {
+            voteType
+            id
+            __typename
+            }
+          votes
+          __typename
+          }
+        __typename
+        }
+      __typename
+      }
+    }
+"""
 
 PARTS_OF_SPEECH = [
     "adjective",
